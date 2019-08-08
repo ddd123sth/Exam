@@ -1,0 +1,498 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/H-ui.admin/static/h-ui/css/H-ui.min.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/skin/default/skin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/style.css" rel="stylesheet" />
+    <title>Generate</title>
+
+    <!--_footer 作为公共模版分离出去-->
+    <script src="~/H-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script src="~/H-ui.admin/lib/layer/2.4/layer.js"></script>
+    <script src="~/H-ui.admin/static/h-ui/js/H-ui.min.js"></script>
+    <script src="~/H-ui.admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+    <script src="../Helper/apiUrl.js"></script> <!--/_footer 作为公共模版分离出去-->
+    <!--请在下方写此页面业务相关的脚本-->
+    <script src="~/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script src="~/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script src="~/H-ui.admin/lib/laypage/1.2/laypage.js"></script>
+    <link href="~/H-ui.admin/lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/H-ui.admin/lib/zTree/v3/js/jquery.ztree.core-3.5.js"></script>
+    <script src="~/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script>
+    @*<script src="~/H-ui.admin/lib/zTree/v3/js/jquery.ztree.excheck-3.5.min.js"></script>*@
+    <script type="text/javascript">
+        var UnitId;//定义外键Id
+        //文本就绪函数,当页面加载完毕,树即绑定完毕
+        $(function () {
+            var setting = {
+                data: {
+                    simpleData:
+                    {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "pid",
+                        rootPId: null
+                    },
+                    key: {
+                        checked: "isChecked"
+                    }
+                },
+                callback:
+                {
+                    beforeClick: zTreeBeforeClick,
+                    onClick: zTreeOnClick,
+                    beforeCheck: true,
+                    onCheck: onCheck
+                },
+                check: {
+                    autoCheckTrigger: false,
+                    chkboxType: { "Y": "", "N": "" },
+                    chkStyle: "checkbox",
+                    enable: true,
+                    nocheckInherit: false,
+                    chkDisabledInherit: false
+                }
+            };
+            $.ajax({
+                url: "/GenerateTree/GetTreeList",
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                    $.fn.zTree.init($("#zTreeDemo"), setting, data);
+                    fillter($.fn.zTree.init($("#zTreeDemo"), setting, data));
+                }
+            })
+        })
+
+        //默认展开树的前三级
+        function fillter(treeObj) {
+            //获得树形图对象
+            var nodeList = treeObj.getNodes();
+            //展开第一个根节点
+            for (var i = 0; i < nodeList.length; i++) {
+                //设置节点展开第二级节点
+                treeObj.expandNode(nodeList[i], true, false, true);
+                var nodespan = nodeList[i].children;
+                if (nodespan.length > 0) {
+                    for (var j = 0; j < nodespan.length; j++) {
+                        //设置节点展开第三级节点
+                        treeObj.expandNode(nodespan[j], true, false, true);
+                    }
+                }
+            }
+        }
+
+        //树节点点击之前事件,返回true则代表点击事件可用
+        function zTreeBeforeClick(treeId, treeNode, clickFlag) {
+            var id = treeNode.id;
+            $("#StageIdHidden").val(id);
+            var retu = "";
+            if (treeNode.parentTId == null) {
+                retu = false;
+            }
+            else {
+                retu = true;
+            }
+            return retu;
+        };
+        //点击树节点之后,根据得到的id返回对应的节点
+        function zTreeOnClick(event, treeId, treeNode) {
+            var treeObj = $.fn.zTree.getZTreeObj("zTreeDemo");
+            var sNodes = treeObj.getSelectedNodes();
+            if (sNodes.length > 0) {
+                var tId = sNodes[0].tId;
+            }
+        };
+        //获取选中的复选框
+        function onCheck(e, treeId, treeNode) {
+            var treeObj = $.fn.zTree.getZTreeObj("zTreeDemo"),
+                nodes = treeObj.getCheckedNodes(true),
+                v = "";
+            for (var i = 0; i < nodes.length; i++) {
+                v += nodes[i].id + ",";
+            }
+            UnitId = v;
+        }
+
+
+
+
+
+
+
+
+
+        //加载题目信息
+        function loadquestion(res) {
+            if (res.length > 0) {
+                var str = "";
+                str += "<table style='width:100%;text-align:center;'>";
+                str += "<tr style='background-color:#f5fafe;'><td><input id='all' type='checkbox' onchange='Change()' /></td><td>题号</td><td>问题</td><td>题目类型</td><td>A</td><td>B</td><td>C</td><td>D</td><td>答案</td><td>操作</td></tr>";
+                for (var i = 0; i < res.length; i++) {
+                    var question = res[i].Question;
+                    if (question.length > 10) {
+                        question = question.substring(1, 10) + "...";
+                    }
+                    str += "<tr>";
+                    str += "<td><input name='ck' type='checkbox' value='" + res[i].Id + "' /></td>";
+                    str += "<td>" + res[i].Id + "</td>";
+                    str += "<td style='display:none;'>" + res[i].Question + "</td>";
+                    str += "<td><a href='#' onclick='look(" + res[i].Id + "," + res[i].QuestionType + ",this)'>" + question + "</a></td>";
+                    str += "<td>" + (res[i].QuestionType == 1 ? "单选题" : (res[i].QuestionType == 2 ? "多选题" : "判断题")) + "</td>";
+                    str += "<td>" + res[i].A + "</td>";
+                    str += "<td>" + res[i].B + "</td>";
+                    str += "<td>" + res[i].C + "</td>";
+                    str += "<td>" + res[i].D + "</td>";
+
+                    if (res[i].QuestionType == 3) {
+                        str += "<td>" + (res[i].JudgeAnswer == 0 ? "错" : "对") + "</td>";
+                    }
+                    else {
+                        str += "<td>" + res[i].ChoiceAnswer + "</td>";
+                    }
+                    str += "<td><a href='#' style='text-decoration:none;' onclick='del(" + res[i].Id + ")'>删除</a><a href='#' style='text-decoration:none;margin-left:10px;' onclick='Upt(" + res[i].Id + "," + res[i].QuestionType + ",this)' >编辑</a></td>";
+                    str += "</tr>";
+                }
+                str += "</table>";
+                $("#question").append(str);
+            }
+        }
+        function look(id, type, obj) {
+            var choice = $(obj).parent().next().next().next().next().next().next().html();
+            var d = $(obj).parent().next().next().next().next().next().html();
+            var c = $(obj).parent().next().next().next().next().html();
+            var b = $(obj).parent().next().next().next().html();
+            var a = $(obj).parent().next().next().html();
+            var types = $(obj).parent().next().html();
+            types = (types == "单选题" ? 1 : (types == "多选题" ? 2 : 3));
+            var question = $(obj).parent().prev().html();
+            var id = $(obj).parent().prev().prev().html();
+            var str = "";
+            str += "<table style='line-height:30px;'>";
+            str += "<tr style='display:none;'><td>Id</td><td><input type='text' id='id' value='" + id + "' /></td></tr>";
+            str += "<tr><td style='text-align:right;'>题目：</td><td><span>" + question + "</span></td></tr>";
+            str += "<tr><td style='text-align:right;'>题目类型：</td><td><input name='tp' value='1' type='radio' />单选题<input name='tp' value='2' type='radio' />多选题<input name='tp' value='3' type='radio' />判断题</td></tr>";
+            if (type == 3) {
+                str += "<tr><td style='text-align:right;'>正确答案：</td><td><input name='pd' value='0' type='radio' />错<input name='pd' value='1' type='radio' />对</td></tr>";
+            } else {
+                str += "<tr><td style='text-align:right;'>选项A：</td><td><span>" + a + "</span></td></tr>";
+                str += "<tr><td style='text-align:right;'>选项B：</td><td><span>" + b + "</span></tr>";
+                str += "<tr><td style='text-align:right;'>选项C：</td><td><span>" + c + "</span></td></tr>";
+                str += "<tr><td style='text-align:right;'>选项D：</td><td><span>" + d + "</span></td></tr>";
+                str += "<tr><td style='text-align:right;'>正确答案：</td><td><span>" + choice + "</span></td></tr>";
+            }
+            str += "</table>";
+            layer.open({
+                type: 1,
+                title: "修改题目信息",
+                skin: "layui-layer-rim",
+                maxmin: true,
+                area: ["400px", "400px"],
+                content: str
+            })
+            $("input[name='tp'][value=" + types + "]").attr("checked", true);
+            if (types == 3) {
+                judge = choice == "对" ? 1 : 0;
+                $("input[name='pd'][value='" + judge + "']").attr("checked", true);
+            }
+            $("input[name='tp']").attr("disabled", true);
+            $("input[name='pd']").attr("disabled", true);
+        }
+        //修改弹窗
+        function Upt(id, type, obj) {
+            var choice = $(obj).parent().prev().html();
+            var d = $(obj).parent().prev().prev().html();
+            var c = $(obj).parent().prev().prev().prev().html();
+            var b = $(obj).parent().prev().prev().prev().prev().html();
+            var a = $(obj).parent().prev().prev().prev().prev().prev().html();
+            var types = $(obj).parent().prev().prev().prev().prev().prev().prev().html();
+            types = (types == "单选题" ? 1 : (types == "多选题" ? 2 : 3));
+            var question = $(obj).parent().prev().prev().prev().prev().prev().prev().prev().prev().html();
+            var id = $(obj).parent().prev().prev().prev().prev().prev().prev().prev().prev().prev().html();
+            var str = "";
+            str += "<table>";
+            str += "<tr style='display:none;'><td>Id</td><td><input type='text' id='id' value='" + id + "' /></td></tr>";
+            str += "<tr><td>题目：</td><td><textarea id='name' rows='2' cols='20'>" + question + "</textarea></td></tr>";
+            str += "<tr><td>题目类型：</td><td><input name='tp' value='1' type='radio' onchange='cg()' />单选题<input name='tp' value='2' type='radio' onchange='cg()' />多选题<input name='tp' value='3' type='radio' onchange='cg()' />判断题</td></tr>";
+            if (type == 3) {
+                str += "<tr style='display:none;'><td>选项A：</td><td><textarea id='A' rows='2' cols='20'>" + a + "</textarea></td></tr>";
+                str += "<tr style='display:none;'><td>选项B：</td><td><textarea id='B' rows='2' cols='20'>" + b + "</textarea></tr>";
+                str += "<tr style='display:none;'><td>选项C：</td><td><textarea id='C' rows='2' cols='20'>" + c + "</textarea></td></tr>";
+                str += "<tr style='display:none;'><td>选项D：</td><td><textarea id='D' rows='2' cols='20'>" + d + "</textarea></td></tr>";
+                str += "<tr style='display:none;'><td>正确答案：</td><td><input type='text' id='choice' value=" + choice + " /></td></tr>";
+                str += "<tr><td>正确答案：</td><td><input name='pd' value='0' type='radio' />错<input name='pd' value='1' type='radio' />对</td></tr>";
+            } else {
+                str += "<tr><td>选项A：</td><td><textarea id='A' rows='2' cols='20'>" + a + "</textarea></td></tr>";
+                str += "<tr><td>选项B：</td><td><textarea id='B' rows='2' cols='20'>" + b + "</textarea></tr>";
+                str += "<tr><td>选项C：</td><td><textarea id='C' rows='2' cols='20'>" + c + "</textarea></td></tr>";
+                str += "<tr><td>选项D：</td><td><textarea id='D' rows='2' cols='20'>" + d + "</textarea></td></tr>";
+                str += "<tr><td>正确答案：</td><td><input type='text' id='choice' value=" + choice + " /></td></tr>";
+                str += "<tr style='display:none;'><td>正确答案：</td><td><input name='pd' value='0' type='radio' />错<input name='pd' value='1' type='radio' />对</td></tr>";
+            }
+            str += "<tr><td></td><td><input type='button' value='保存' onclick='Update()' /></td></tr>";
+            str += "</table>";
+            layer.open({
+                type: 1,
+                title: "修改题目信息",
+                skin: "layui-layer-rim",
+                maxmin: true,
+                area: ["400px", "500px"],
+                content: str
+            })
+            $("input[name='tp'][value=" + types + "]").attr("checked", true);
+            if (types == 3) {
+                judge = choice == "对" ? 1 : 0;
+                $("input[name='pd'][value='" + judge + "']").attr("checked", true);
+            }
+        }
+        function cg() {
+            var tp = $("input[name='tp']:checked").val();
+            if (tp == 3) {
+                $("#A").parent().parent().hide();
+                $("#B").parent().parent().hide();
+                $("#C").parent().parent().hide();
+                $("#D").parent().parent().hide();
+                $("#choice").parent().parent().hide();
+                $("input[name='pd']").parent().parent().show();
+            }
+            else {
+                $("#A").parent().parent().show();
+                $("#B").parent().parent().show();
+                $("#C").parent().parent().show();
+                $("#D").parent().parent().show();
+                $("#choice").parent().parent().show();
+                $("input[name='pd']").parent().parent().hide();
+            }
+        }
+        //删除
+        function del(id) {
+            if (confirm("确定要删除吗？")) {
+                $.ajax({
+                    url: "/QuestionBank/Delete",
+                    type: "get",
+                    dataType: "json",
+                    data: { id: id },
+                    success: function (obj) {
+                        if (obj > 0) {
+                            layer.msg("删除成功！", { icon: 1, time: 2000 });
+                            loadquestion();
+                            layer.closeAll();
+                        }
+                        else {
+                            layer.msg("删除失败！", { icon: 2, time: 3000 });
+                        }
+                    }
+                })
+            }
+        }
+        //修改
+        function Update() {
+            var Id = $("#id").val();
+            var Question = $("#name").val();
+            var QuestionType = $("input[name='tp']:checked").val();
+            if (QuestionType == 3) {
+                var A = "";
+                var B = "";
+                var C = "";
+                var D = "";
+                var d = $("input[name='pd']:checked").val();
+                if (d != 1 && d != 0) {
+                    layer.msg("请选择答案...", { icon: 3, time: 2000 });
+                    return;
+                }
+                var ChoiceAnswer = "";
+                var JudgeAnswer = $("input[name='pd']:checked").val();
+            }
+            else {
+                var A = $("#A").val();
+                var B = $("#B").val();
+                var C = $("#C").val();
+                var D = $("#D").val();
+                var ChoiceAnswer = $("#choice").val();
+                if (QuestionType == 1) {
+                    if (ChoiceAnswer.length > 1 || ChoiceAnswer == "对" || ChoiceAnswer == "错") {
+                        layer.msg("请重新选择答案...", { icon: 3, time: 2000 });
+                        return;
+                    }
+                }
+                else {
+                    if (ChoiceAnswer.length <= 1) {
+                        layer.msg("请重新选择答案...", { icon: 3, time: 2000 });
+                        return;
+                    }
+                }
+                var JudgeAnswer = "";
+            }
+            $.ajax({
+                url: "/QuestionBank/Update",
+                type: "get",
+                dataType: "json",
+                data: { Id: Id, Question: Question, QuestionType: QuestionType, A: A, B: B, C: C, D: D, ChoiceAnswer: ChoiceAnswer, JudgeAnswer: JudgeAnswer },
+                success: function (obj) {
+                    if (obj > 0) {
+                        layer.msg("修改成功！", { icon: 1, time: 2000 });
+                        loadquestion();
+                        layer.closeAll();
+                    }
+                    else {
+                        layer.msg("修改失败！", { icon: 2, time: 2000 });
+                    }
+                }
+            })
+        }
+        //复选框全选、反选
+        function Change() {
+            var all = document.getElementById("all").checked;
+            var ck = document.getElementsByName("ck");
+            for (var i = 0; i < ck.length; i++) {
+                ck[i].checked = all;
+            }
+        }
+        //批量删除
+        function delAll() {
+            var id = "";
+            $("input[name='ck']:checked").each(function () {
+                id = id + $(this).val() + ",";
+            })
+            id = id.substring(id.length - 1, 0);
+            if (id.length == 0) {
+                layer.msg("请选择...", { icon: 3, time: 2000 });
+                return;
+            }
+            if (confirm("确定要删除吗？")) {
+                $.ajax({
+                    url: "/QuestionBank/Delete",
+                    type: "get",
+                    dataType: "json",
+                    data: { id: id },
+                    success: function (obj) {
+                        if (obj > 0) {
+                            layer.msg("删除成功！", { icon: 1, time: 2000 });
+                            loadquestion();
+                            layer.closeAll();
+                        }
+                        else {
+                            layer.msg("删除失败！", { icon: 2, time: 3000 });
+                        }
+                    }
+                })
+            }
+        }
+
+
+
+
+
+
+
+
+        //点击生成试题
+        function GenerateTest() {
+
+            var id = UnitId.substring(UnitId.length - 1, 0);
+            var qq = id.split(',');
+            var ExamType = "";
+            if (qq.length > 1 && qq.length < 20) {
+                ExamType = "周考";
+            }
+            if (qq.length == 1) {
+                ExamType = "日考";
+            }
+            if (qq.length == 20) {
+                ExamType = "月考";
+            }
+            
+            var treeObj = $.fn.zTree.getZTreeObj("zTreeDemo");
+            var nodes = treeObj.getCheckedNodes(true);
+            var exanName = $("#ExamName").val();
+            if (exanName == "") {
+                alert("请输入试卷名称！");
+                return;
+            }
+            sessionStorage.setItem("OLExamName", exanName);
+            var radioNum = $("#radioNum").val();
+            var checkboxNum = $("#checkboxNum").val();
+            var juegeNum = $("#judgeNum").val();
+            
+            $.ajax({
+                url: '/GenerateTree/backquestionDay',
+                data: { id: id, ExamType: ExamType, sessionStorage: exanName, radio: radioNum, checkbox: checkboxNum, judge: juegeNum },
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    if (res == null) {
+                        layer.msg("生成失败！", { icon: 2, time: 2000 });
+                    }
+                    else if (res[0].Id == -1) {
+                        //layer.msg("生成试题不够" + (radioNum + checkboxNum + juegeNum) + "道，请重新生成！", { icon: 2, time: 2000 });
+                        alert("生成试题不够" + (radioNum + checkboxNum + juegeNum) + "道，请重新生成");
+                    }
+                    else {
+                        layer.msg("生成成功！", { icon: 1, time: 2000 });
+                        loadquestion(res);
+                    }
+
+                    //if (res.length == (radioNum + checkboxNum + juegeNum)) {
+                    //    layer.msg("生成成功！", { icon: 1, time: 2000 });
+                    //    loadquestion(res);
+                    //}
+                    //if (res.length < (radioNum + checkboxNum + juegeNum)) {
+                    //    alert("试题数量不足" + (radioNum + checkboxNum + juegeNum) + "道，请重新生成！");
+                    //}
+                }
+            })
+        }
+        
+    </script>
+</head>
+<body>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 学院管理 <span class="c-gray en">&gt;</span> 阶段管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <table class="table">
+        <tr>
+            <td width="200" class="va-t">
+                <ul id="zTreeDemo" class="ztree" style="font-size:20px;color:white;"></ul>
+            </td>
+            <td class="va-t" style="margin-top:0px;" align="center">
+                <p align="center">
+                    <input type="number" name="name" id="radioNum" placeholder="单选题名称" style="width:250px" class="input-text">
+                    <input type="number" name="name" id="checkboxNum" placeholder="多选题数量" style="width:250px" class="input-text">
+                    <input type="number" name="name" id="judgeNum" placeholder="判断题数量" style="width:250px" class="input-text">
+                </p>
+                <p align="center">
+                    <input type="text" name="name" id="ExamName" placeholder="请输入试题名称" style="width:250px" class="input-text">
+                    <button name="" id="" class="btn btn-success" type="button" onclick="GenerateTest()">
+                        <i class="Hui-iconfont">&#xe665;</i> 单击生成试题
+                    </button>
+                </p>
+                <div class="cl pd-5 bg-1 bk-gray mt-20">
+                    <span class="l">
+                        <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                        <a class="btn btn-primary radius" onclick="addquestion()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加题目</a>
+                        <input type="button" style="background-color:#5a98de;border:none;border-radius:5px 5px;height:33px;color:white;width:70px;" value="导入试题" onclick="JavaScript: $('input[name=files]').click()" />
+                        <input id="files" type="file" name="files" hidden onchange="imports()" />
+                        <input type="button" style="background-color:#dd514c;border:none;border-radius:5px 5px;height:33px;color:white;width:70px;" value="导出试题" onclick="exports()" />
+                    </span>
+                    <span class="r">共有：<strong><label id="StudentNum"></label></strong> 道题目</span>
+                </div>
+                <div id="question" style="width:100%;">
+
+                </div>
+                <p id="page" style="text-align:center;color:#ff6a00;font-size:20px;"></p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

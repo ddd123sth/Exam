@@ -1,0 +1,76 @@
+﻿@using Exam.Back.Model
+@{
+    Layout = null;
+}
+@model List<Users>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PersonalList</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <link href="~/Views/Personal/bootstrap.css" rel="stylesheet" />
+    <script src="~/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script src="~/H-ui.admin/lib/layer/2.4/layer.js"></script>
+    <script>
+        $(function () {
+            PersonalIndex();
+        })
+        var userName = sessionStorage.getItem("UserName");
+        function PersonalIndex() {
+            $.ajax({
+                url: "/Personal/PersonalIndex?name=" + userName,
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                    $("#name").val(data[0].AccountName)
+                    $("#pwd").val(data[0].Pwd)
+                    $("#tel").val(data[0].Phone)
+                    $("#user-time").val(data[0].CreTime)
+                    $("input[name=sex][value=" + data[0].Sex + "]").attr("checked", "checked");
+                }
+            })
+        }
+        function Close() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td style="text-align:right;">用户名：</td>
+            <td><input type="text" id="name" disabled="disabled" /></td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">密码：</td>
+            <td><input type="password" id="pwd" disabled="disabled"/></td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">性别：</td>
+            <td>
+                <input type="radio" name="sex" value="1" disabled="disabled" />男
+                <input type="radio" name="sex" value="0" disabled="disabled" />女
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">手机号：</td>
+            <td><input type="text" id="tel" disabled="disabled" /></td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">注册时间：</td>
+            <td>
+                <input type="text"  class="input-text" disabled="disabled" value="" placeholder="" id="user-time" name="CreTime" onclick="WdatePicker()">
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" value="关闭" style="background-color:#dd514c;border:none;border-radius:5px 5px;height:33px;color:white;width:70px;" onclick="Close()" />
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>

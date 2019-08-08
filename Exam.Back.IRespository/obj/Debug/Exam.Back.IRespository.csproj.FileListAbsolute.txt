@@ -1,0 +1,9 @@
+E:\BackGround\Exam.Back\Exam.Back.IRespository\bin\Debug\Exam.Back.IRespository.dll
+E:\BackGround\Exam.Back\Exam.Back.IRespository\bin\Debug\Exam.Back.IRespository.pdb
+E:\BackGround\Exam.Back\Exam.Back.IRespository\bin\Debug\Exam.Back.Model.dll
+E:\BackGround\Exam.Back\Exam.Back.IRespository\bin\Debug\Exam.Back.Model.pdb
+E:\BackGround\Exam.Back\Exam.Back.IRespository\obj\Debug\Exam.Back.IRespository.csprojAssemblyReference.cache
+E:\BackGround\Exam.Back\Exam.Back.IRespository\obj\Debug\Exam.Back.IRespository.csproj.CoreCompileInputs.cache
+E:\BackGround\Exam.Back\Exam.Back.IRespository\obj\Debug\Exam.Back.IRespository.csproj.CopyComplete
+E:\BackGround\Exam.Back\Exam.Back.IRespository\obj\Debug\Exam.Back.IRespository.dll
+E:\BackGround\Exam.Back\Exam.Back.IRespository\obj\Debug\Exam.Back.IRespository.pdb

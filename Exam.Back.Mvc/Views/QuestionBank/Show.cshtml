@@ -1,0 +1,80 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    /**把HTML和BODY的高度设置成100%**/
+    div #menu {
+        height: 100%;
+        background-color: #e1dfdf;
+    }
+    /**把你DIV的高度设置成100%**/
+</style>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/H-ui.admin/lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/H-ui.admin/lib/zTree/v3/js/jquery.ztree.core-3.5.js"></script>
+    <script src="~/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="~/H-ui.admin/lib/layer/2.4/layer.js"></script>
+    <script src="~/Scripts/QuestionBank.js/Question.js"></script>
+
+    <link href="~/H-ui.admin/static/h-ui/css/H-ui.min.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/skin/default/skin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/style.css" rel="stylesheet" />
+    <title></title>
+    <script>
+
+    </script>
+</head>
+<body>
+    <div>
+        <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 题库管理 <span class="c-gray en">&gt;</span> 试题管理 </nav>
+        <div id="menu" style="float:left;width:20%;">
+            <ul id="treeDemo" class="ztree" style="font-size:20px;color:white;"></ul>
+        </div>
+        <div id="content" style="float:right;width:80%">
+            <div id="operate" style="width:100%;">
+                <form id="form1" style="display:none;">
+                    
+                    <div class="text-c">
+                        <input type="text" id="unitid" hidden />
+                        <input type="text" name="" id="qn" placeholder="题目名称" style="width:250px" class="input-text">
+                        <select id="type" style="height:30px;margin-top:2px;">
+                            <option value="0">---请选择---</option>
+                            <option value="1">单选题</option>
+                            <option value="2">多选题</option>
+                            <option value="3">判断题</option>
+                        </select>
+                        <button name="" id="" class="btn btn-success" type="button" onclick="loadquestion(1,10)"><i class="Hui-iconfont">&#xe665;</i> 查找试题</button>
+                    </div>
+                    <div class="cl pd-5 bg-1 bk-gray mt-20">
+                        <span class="l">
+                            <a href="javascript:;" onclick="delAll()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                            <a class="btn btn-primary radius" onclick="addquestion()" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加题目</a>
+                            <input type="button" style="background-color:#5a98de;border:none;border-radius:5px 5px;height:33px;color:white;width:70px;" value="导入试题" onclick="JavaScript: $('input[name=files]').click()" />
+                            <input id="files" type="file" name="files" hidden onchange="imports()" />
+                            <input type="button" style="background-color:#dd514c;border:none;border-radius:5px 5px;height:33px;color:white;width:70px;" value="导出试题" onclick="exports()" />
+                        </span>
+                        <span class="r">共有：<strong><label id="StudentNum"></label></strong> 道题目</span>
+                    </div>
+                </form>
+            </div>
+            <div id="question" style="width:100%;">
+
+            </div>
+            <p id="page" style="text-align:center;color:#ff6a00;font-size:20px;"></p>
+        </div>
+    </div>
+</body>
+</html>

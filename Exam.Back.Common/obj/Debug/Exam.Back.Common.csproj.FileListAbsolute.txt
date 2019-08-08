@@ -1,0 +1,15 @@
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\Exam.Back.Common.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\Exam.Back.Common.pdb
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\Dapper.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\MySql.Data.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\Newtonsoft.Json.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\Dapper.xml
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\MySql.Data.xml
+E:\BackGround\Exam.Back\Exam.Back.Common\obj\Debug\Exam.Back.Common.csproj.CoreCompileInputs.cache
+E:\BackGround\Exam.Back\Exam.Back.Common\obj\Debug\Exam.Back.Common.csproj.CopyComplete
+E:\BackGround\Exam.Back\Exam.Back.Common\obj\Debug\Exam.Back.Common.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\obj\Debug\Exam.Back.Common.pdb
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\ServiceStack.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\ServiceStack.Interfaces.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\bin\Debug\ServiceStack.ServiceInterface.dll
+E:\BackGround\Exam.Back\Exam.Back.Common\obj\Debug\Exam.Back.Common.csprojAssemblyReference.cache

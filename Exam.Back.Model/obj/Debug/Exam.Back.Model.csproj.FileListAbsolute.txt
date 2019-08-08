@@ -1,0 +1,6 @@
+E:\BackGround\Exam.Back\Exam.Back.Model\bin\Debug\Exam.Back.Model.dll
+E:\BackGround\Exam.Back\Exam.Back.Model\bin\Debug\Exam.Back.Model.pdb
+E:\BackGround\Exam.Back\Exam.Back.Model\obj\Debug\Exam.Back.Model.csproj.CoreCompileInputs.cache
+E:\BackGround\Exam.Back\Exam.Back.Model\obj\Debug\Exam.Back.Model.dll
+E:\BackGround\Exam.Back\Exam.Back.Model\obj\Debug\Exam.Back.Model.pdb
+E:\BackGround\Exam.Back\Exam.Back.Model\obj\Debug\Exam.Back.Model.csprojAssemblyReference.cache

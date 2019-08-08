@@ -1,0 +1,60 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Show</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/Journal/Journal.js"></script>
+    <link href="~/H-ui.admin/static/h-ui/css/H-ui.min.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/skin/default/skin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/style.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="~/H-ui.admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="~/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="~/H-ui.admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="~/H-ui.admin/static/h-ui.admin/css/style.css" />
+
+    <link href="~/Scripts/Journal/H-ui.min.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/skin/default/skin.css" rel="stylesheet" />
+    <link href="~/H-ui.admin/static/h-ui.admin/css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统日志 <span class="c-gray en">&gt;</span> 操作日志 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+        
+        <div class="page-container">
+            <div class="text-c">
+                <input type="text" name="" id="name" placeholder="请输入用户名" style="width:250px" class="input-text">
+                <button name="" id="" class="btn btn-success" type="button" onclick="Load(1,10)"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+            </div>
+            
+            <div class="mt-20">
+                <table class="table table-border table-bordered table-bg table-hover" >
+                    <thead>
+                        <tr class="text-c">
+                            <th width="60">用户名</th>
+                            <th width="100">执行操作</th>
+                            <th width="50">操作结果</th>
+                            <th width="100">操作时间</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb"></tbody>
+                </table>
+                <div id="PagesDiv"></div>
+            </div>
+        </div>
+        <p id="page" style="text-align:center;color:#ff6a00;"></p>
+    </div>
+</body>
+</html>
